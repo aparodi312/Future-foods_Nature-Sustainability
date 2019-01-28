@@ -28,6 +28,7 @@ url("https://rdcu.be/bdq1i")
 
 # Nutritional_ff.csv -> Contains the nutritional composition of future foods.
 # Envimpactsff -> Contains the land use, energy use and global warming potential of future foods.
+#Leip_impacts -> Contains the land use and global warming potential of plant and animal-source foods
 # requirements -> Contains the daily nutrient requirements.
 
 #All these files are available at the github repository: https://github.com/aparodi312/Future-foods_Nature-Sustainability
@@ -782,7 +783,7 @@ Meat$Component <- ifelse(Meat$Component=="Calcium, Ca", "Ca (mg)",
 
 Meat$Units <- ifelse(Meat$Units=="mg", "mg/100g",
                      ifelse(Meat$Units=="g", "g/100g", 
-                            ifelse(Meat$Units=="µg", "ug/100g", 
+                            ifelse(Meat$Units=="Âµg", "ug/100g", 
                                    ifelse(Meat$Units=="IU", "IU/100g", "0"))))  
 
 
@@ -961,7 +962,7 @@ Seafood$Component <- ifelse(Seafood$Component=="Calcium, Ca", "Ca (mg)",
 
 Seafood$Units <- ifelse(Seafood$Units=="mg", "mg/100g",
                         ifelse(Seafood$Units=="g", "g/100g", 
-                               ifelse(Seafood$Units=="µg", "ug/100g", 
+                               ifelse(Seafood$Units=="Âµg", "ug/100g", 
                                       ifelse(Seafood$Units=="IU", "IU/100g", "0")))) 
 
 
@@ -1241,7 +1242,7 @@ Plants$Component <- ifelse(Plants$Component=="Calcium, Ca", "Ca (mg)",
 
 Plants$Units <- ifelse(Plants$Units=="mg", "mg/100g",
                        ifelse(Plants$Units=="g", "g/100g", 
-                              ifelse(Plants$Units=="µg", "ug/100g", 
+                              ifelse(Plants$Units=="Âµg", "ug/100g", 
                                      ifelse(Plants$Units=="IU", "IU/100g", "0"))))  
 
 
@@ -1320,7 +1321,7 @@ Mussel_final2$Component <- ifelse(Mussel_final2$Component=="Calcium, Ca", "Ca (m
 
 Mussel_final2$Units <- ifelse(Mussel_final2$Units=="mg", "mg/100g",
                               ifelse(Mussel_final2$Units=="g", "g/100g", 
-                                     ifelse(Mussel_final2$Units=="µg", "ug/100g", 
+                                     ifelse(Mussel_final2$Units=="Âµg", "ug/100g", 
                                             ifelse(Mussel_final2$Units=="IU", "IU/100g", "0"))))  
 
 
@@ -1418,7 +1419,7 @@ dry <- subset(dry, (Component!= "ALA 18:3 n-3 (g)"
                     &Component!= "DHA 22:6 n-3 (g)"
                     &Component!= "I (ug)"
                     &Component!= "EPA 20:5 n-3 (g)"
-                    &Component!= "Vitamin D2(µg)"
+                    &Component!= "Vitamin D2(Âµg)"
                     &Component!= "Vit. D (ug)"
                     &Component!= "Chitin"
                     &Component!= "DPA 22:5 n-3 (g)"
@@ -3268,125 +3269,3 @@ ggplot(extendedghg2, aes(x=Species, y=mean, fill=Typefood)) +
 
 ggsave("Supplementary Figure 3.pdf", width = 20, height = 25, units="cm", dpi=300)
 
-
-
-
-#Figures report SUSFANS
-
-
-LU_ff_susfans <- subset(extendedlu2, (Typefood=="Future foods"))
-
-ggplot(LU_ff_susfans, aes(x=Species, y=mean, fill=Typefood)) + 
-  geom_bar(stat="identity")+ 
-  geom_errorbar(aes(min=mean-sderror, ymax=mean+sderror), width=.3) +
-  labs(y=expression("LU "(m^{2})))+ 
-  xlab("") +
-  facet_wrap(~Component, scales="free_y", ncol=3) + 
-  theme_classic() +
-  theme(strip.text = element_text(size=10, hjust=0, face="bold"))+ 
-  theme(panel.grid.major  = element_line(colour = "white", size = 0.2))+ 
-  theme(panel.grid.minor  = element_line(colour = "white", size = 0.2))+ 
-  theme(panel.spacing.y=unit(1, "lines"))+
-  theme(strip.background = element_rect(colour="white", fill="white"))+
-  ggtitle("") + 
-  theme(plot.title=element_text(size=13, hjust = 1, vjust=0.5)) + 
-  theme(plot.title = element_text(hjust = 0)) + 
-  theme(axis.text.x = element_text(size = 10, face = "plain",  angle = 65, hjust = 1, vjust=1, colour="black", lineheight = 0)) + 
-  theme(strip.text.y = element_text(angle = 0)) + 
-  theme(strip.background=element_rect(fill="white")) + 
-  guides(fill=guide_legend(title=" ")) + 
-  theme (plot.caption=element_text(size=8, hjust=0.5, vjust=0.8)) + 
-  theme(axis.title.y = element_text(size=12, face="bold")) + 
-  theme(axis.title.x  = element_text(size=14, face="bold"))+ 
-  scale_fill_manual(values=col5)+
-  scale_color_manual(values=col5)+
-  geom_text(data = subset(LU_ff_susfans, is.nan(mean)),aes(y = 0, label = "*"),  vjust=0.4, hjust=0.5,size=4)+
-  geom_text(data = subset(LU_ff_susfans, (Species=="Chlorella" & Component=="Vit. A (800 ug)") | 
-                            ((Species=="Mycoprotein" & Component=="EPA + DHA (250 mg)") |
-                               Species=="Soybean" & Component=="EPA + DHA (250 mg)")) ,aes(y = 0, label = "ND"),  vjust=0, size=3)+
-  theme(legend.position="bottom")+
-  scale_y_continuous(expand = expand_scale(c(0, 0.05)))+
-  theme(legend.position="none")
-
-ggsave("LU_Susfans.png", width = 18, height = 21, units="cm", dpi=300)
-ggsave("LU_Susfans.pdf", width = 18, height = 21, units="cm", dpi=300)
-
-
-#GHG Emissions SUSFANS
-
-GHG_ff_susfans <- subset(extendedghg2, (Typefood=="Future foods"))
-
-ggplot(GHG_ff_susfans, aes(x=Species, y=mean, fill=Typefood)) + 
-  geom_bar(stat="identity")+ 
-  geom_errorbar(aes(min=mean-sderror, ymax=mean+sderror), width=.3) +
-  labs(y=expression("LU "(m^{2})))+ 
-  xlab("") +
-  facet_wrap(~Component, scales="free_y", ncol=3) + 
-  theme_classic() +
-  theme(strip.text = element_text(size=10, hjust=0, face="bold"))+ 
-  theme(panel.grid.major  = element_line(colour = "white", size = 0.2))+ 
-  theme(panel.grid.minor  = element_line(colour = "white", size = 0.2))+ 
-  theme(panel.spacing.y=unit(1, "lines"))+
-  theme(strip.background = element_rect(colour="white", fill="white"))+
-  ggtitle("") + 
-  theme(plot.title=element_text(size=13, hjust = 1, vjust=0.5)) + 
-  theme(plot.title = element_text(hjust = 0)) + 
-  theme(axis.text.x = element_text(size = 10, face = "plain",  angle = 65, hjust = 1, vjust=1, colour="black", lineheight = 0)) + 
-  theme(strip.text.y = element_text(angle = 0)) + 
-  theme(strip.background=element_rect(fill="white")) + 
-  guides(fill=guide_legend(title=" ")) + 
-  theme (plot.caption=element_text(size=8, hjust=0.5, vjust=0.8)) + 
-  theme(axis.title.y = element_text(size=12, face="bold")) + 
-  theme(axis.title.x  = element_text(size=14, face="bold"))+ 
-  scale_fill_manual(values=col5)+
-  scale_color_manual(values=col5)+
-  geom_text(data = subset(GHG_ff_susfans, is.nan(mean)),aes(y = 0, label = "*"),  vjust=0.4, hjust=0.5,size=4)+
-  geom_text(data = subset(GHG_ff_susfans, (Species=="Chlorella" & Component=="Vit. A (800 ug)") | 
-                            ((Species=="Mycoprotein" & Component=="EPA + DHA (250 mg)") |
-                               Species=="Soybean" & Component=="EPA + DHA (250 mg)")) ,aes(y = 0, label = "ND"),  vjust=0, size=3)+
-  theme(legend.position="bottom")+
-  scale_y_continuous(expand = expand_scale(c(0, 0.05)))+
-  theme(legend.position="none")
-
-ggsave("GHG_Susfans.png", width = 18, height = 21, units="cm", dpi=300)
-ggsave("GHG_Susfans.pdf", width = 18, height = 21, units="cm", dpi=300)
-
-#Nutritional content for SUSFANS
-
-
-ff_nutrition <- dry
-
-ff_nutrition <- subset(ff_nutrition, Typefood=="Future foods")
-
-ggplot(ff_nutrition, aes(x=Species, y=mean, fill=Typefood)) + 
-  geom_bar(stat="identity")+ 
-  geom_errorbar(aes(min=minussd2, ymax=mean+newsd), width=.3) +
-  ylab("Nutrient supplied with 1 gram of protein of each food") + 
-  xlab("") +
-  facet_wrap(~Component, scales="free_y", ncol=3) + 
-  theme_classic() +
-  theme(strip.text = element_text(size=10, hjust=0, face="bold"))+ 
-  theme(panel.grid.major  = element_line(colour = "white", size = 0.2))+ 
-  theme(panel.grid.minor  = element_line(colour = "white", size = 0.2))+ 
-  theme(panel.spacing.y=unit(1, "lines"))+
-  theme(strip.background = element_rect(colour="white", fill="white"))+
-  ggtitle("") + 
-  ggtitle("") + 
-  theme(plot.title=element_text(size=13, hjust = 1, vjust=0.5)) + 
-  theme(plot.title = element_text(hjust = 0)) + 
-  theme(axis.text.x = element_text(size = 10, face = "plain",  angle = 65, hjust = 1, vjust=1, colour="black", lineheight = 0)) + 
-  theme(strip.text.y = element_text(angle = 0)) + 
-  theme(strip.background=element_rect(fill="white")) + 
-  guides(fill=guide_legend(title=" ")) + 
-  theme (plot.caption=element_text(size=8, hjust=0.5, vjust=0.8, margin=margin(t=10,1,10,100))) + 
-  theme(axis.title.y = element_text(size=12, face="bold")) + 
-  theme(axis.title.x  = element_text(size=14, face="bold"))+ 
-  scale_fill_manual(values=col)+
-  scale_color_manual(values=col)+
-  theme(legend.position="bottom")+
-  geom_text(data = subset(ff_nutrition, is.na(mean)),
-            aes(y = 0, label = "ND"),  vjust=0, size=2)+
-  scale_y_continuous(expand = expand_scale(c(0, 0.05)))+
-  theme(legend.position="none")
-
-ggsave("Nutrition_Susfans.pdf", width = 18, height = 21, units="cm", dpi=300)
